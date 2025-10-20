@@ -1,8 +1,9 @@
 import RobotProfileImg from "../assets/robot.png";
-import UserProfileImg from "../assets/user.png";
-import './ChatMessage.css'
+import UserProfileImg from "../assets/profile-1.jpg";
+import dayjs from "dayjs";
+import "./ChatMessage.css";
 
-export function ChatMessage({ message, sender }) {
+export function ChatMessage({ message, sender, time }) {
   // const message = props.message;
   // const sender = props.sender;
   // const { message, sender } = props;
@@ -25,7 +26,9 @@ export function ChatMessage({ message, sender }) {
       {sender === "robot" && (
         <img src={RobotProfileImg} className="chat-message-profile" />
       )}
-      <p className="chat-message-text">{message}</p>
+      <div className="chat-message-text">{message}
+        <div className="time-text">{dayjs(time).format('HH:mm')}</div>
+      </div>
       {sender === "user" && (
         <img src={UserProfileImg} className="chat-message-profile" />
       )}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Chatbot } from "supersimpledev";
-import './ChatInput.css'
+import dayjs from "dayjs";
+import "./ChatInput.css";
 import LoadingImg from "../assets/loading-spinner.gif";
 
 export function ChatInput({ chatMessages, setChatMessages }) {
@@ -21,7 +22,12 @@ export function ChatInput({ chatMessages, setChatMessages }) {
 
     const newChatMessages = [
       ...chatMessages,
-      { message: inputText, sender: "user", id: crypto.randomUUID() },
+      {
+        message: inputText,
+        sender: "user",
+        id: crypto.randomUUID(),
+        time: dayjs().valueOf(),
+      },
     ];
 
     setChatMessages(newChatMessages);
@@ -32,12 +38,19 @@ export function ChatInput({ chatMessages, setChatMessages }) {
         message: <img src={LoadingImg} className="loading-image" />,
         sender: "robot",
         id: crypto.randomUUID(),
+        time: dayjs().valueOf(),
       },
     ]);
+
     const response = await Chatbot.getResponseAsync(inputText);
     setChatMessages([
       ...newChatMessages,
-      { message: response, sender: "robot", id: crypto.randomUUID() },
+      {
+        message: response,
+        sender: "robot",
+        id: crypto.randomUUID(),
+        time: dayjs().valueOf(),
+      },
     ]);
 
     setIsLoading(false);
@@ -53,6 +66,12 @@ export function ChatInput({ chatMessages, setChatMessages }) {
     }
   }
 
+  function clearMessages() {
+    setChatMessages([]);
+    // chatMessages is being updated, the
+    // /useEffect in the App component will run, and it will automatically update messages in localStorage to be [].
+  }
+
   return (
     <div className="chat-input-container">
       <input
@@ -65,6 +84,9 @@ export function ChatInput({ chatMessages, setChatMessages }) {
       />
       <button onClick={sendMessage} className="send-button">
         Send
+      </button>
+      <button onClick={clearMessages} className="clear-button">
+        Clear
       </button>
     </div>
   );
